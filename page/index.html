@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edible or Poisonous</title>
+    <style>
+        body { 
+            display:flex; flex-direction:column; 
+            align-items:center; 
+            justify-content:center;
+            min-height:100vh; 
+            background:#B6DBF6; 
+            font-family:Tahoma; margin:0; 
+        }
+        .container {
+            max-width:420px; 
+            width:100%; 
+            background:#fff; 
+            padding:18px; 
+            border-radius:18px;
+        }
+        h1 { 
+            text-align:center; 
+            margin:0 0 12px 0; 
+        }
+        .img-upload { 
+            width:100%; 
+            height:260px; 
+            background:#f2f2f2; 
+            border-radius:12px;
+            display:flex; 
+            align-items:center; 
+            justify-content:center; 
+            flex-direction:column;
+            overflow:hidden; 
+            position:relative; 
+        }
+        .img-upload img { 
+            max-width:100%; 
+            max-height:100%; 
+            object-fit:contain; 
+            display:block; 
+        }
+        input[type=file] { 
+            display:block; 
+            margin:8px 10px;
+        }
+        .select-img, .refresh-btn { 
+            width:100%; 
+            height:48px; 
+            border:none; 
+            border-radius:10px;
+            background:blueviolet; 
+            color:#fff; 
+            font-weight:600; 
+            margin-top:12px; 
+        }
+        .select-img:hover, .refresh-btn:hover { 
+            background:darkblue; 
+            cursor:pointer; 
+        }
+        .result { 
+            margin-top:12px; 
+            font-weight:700; 
+            text-align:center; 
+        }
+    </style>
+</head>
+<body>
+    <h1>Edible Fungi or Poisonous Classifier</h1>
+
+    <div class="container">
+        <form method="POST" enctype="multipart/form-data" id="predictForm">
+        <div class="img-upload" id="imgUpload">
+            {% if image_path %}
+                <img src="{{ image_path }}" alt="Uploaded Image" id="serverPreview">
+            {% else %}
+                <input type="file" name="image" id="imageInput" accept="image/*" required>
+                <p id="uploadText" style="font-size:15px; color:#999; margin:0 10px;">Upload your Sporocarp Mushroom Image</p>
+                <div id="previewCon" style="width:100%; text-align:center;"></div>
+            {% endif %}
+        </div>
+
+        {% if not image_path %}
+            <button type="submit" class="select-img">Predict</button>
+        {% endif %}
+        </form>
+
+        {% if result %}
+        <div class="result">Result: {{ result }}</div>
+
+        <form action="/refresh" method="POST" style="margin-top:8px;">
+            <button type="submit" class="refresh-btn">Refresh</button>
+        </form>
+        {% endif %}
+    </div>
+
+    <script>
+        const imageInput = document.getElementById('imageInput');
+        const uploadText = document.getElementById('uploadText');
+        const previewCon = document.getElementById('previewCon');
+
+        if (imageInput) {
+        imageInput.addEventListener('change', function () {
+            const file = this.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+            //hidden input & text
+            imageInput.style.display = 'none';
+            if (uploadText) uploadText.style.display = 'none';
+
+            //clear preview
+            previewCon.innerHTML = '';
+
+            //single image preview
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.alt = 'Preview';
+            img.style.maxWidth = '100%';
+            img.style.maxHeight = '100%';
+            img.style.objectFit = 'contain';
+            img.style.borderRadius = '12px';
+            previewCon.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        });
+        }
+    </script>
+</body>
+</html>
