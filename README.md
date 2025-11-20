@@ -1,5 +1,5 @@
 ## Preview
-![Uploading preview.gif…]()
+![Image](https://github.com/user-attachments/assets/ec73ed42-cc9d-4258-82f4-de3ae9aeee1f)
 
 ## Description
 Fungi Image Classification using CNN Model and Transfer Learning (MobileNet2.0). Models classify in 2 classes (edible or poisonous fungi), the Transfer Learning model implemented to web due to high accuracy. The goal is to create a simple website to classify fungi image whether it's edible or not.
